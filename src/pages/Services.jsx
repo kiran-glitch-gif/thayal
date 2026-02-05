@@ -3,6 +3,7 @@ import { Row, Col, Card, Checkbox, Slider, Select, Button, Modal, Tag, Typograph
 import { FilterOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { useStore } from '../store/useStore';
 import { motion } from 'framer-motion';
+import { API_URL } from '../config';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -33,7 +34,7 @@ export default function Services() {
     });
 
     useEffect(() => {
-        fetch('/api/products')
+        fetch(`${API_URL}/api/products`)
             .then(res => res.json())
             .then(data => setProducts(data))
             .catch(err => console.error('Error fetching products:', err));

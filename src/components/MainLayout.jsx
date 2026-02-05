@@ -131,6 +131,7 @@ export default function MainLayout() {
                             <li><Link to="/services" className="hover:text-accent">Services</Link></li>
                             <li><Link to="/track/1" className="hover:text-accent">Track Order</Link></li>
                             <li><Link to="/contact" className="hover:text-accent">Support</Link></li>
+                            <li><Link to="/admin" className="text-gray-500 hover:text-white text-xs">Admin Portal</Link></li>
                         </ul>
                     </div>
                     <div>

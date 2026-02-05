@@ -7,6 +7,7 @@ import Contact from './pages/Contact';
 import Measurements from './pages/Measurements';
 import Track from './pages/Track';
 import Checkout from './pages/Checkout';
+import AdminDashboard from './pages/AdminDashboard';
 import { useStore } from './store/useStore';
 import { useEffect } from 'react';
 
@@ -77,6 +78,7 @@ export default function App() {
           <Route path="measurements" element={<Measurements />} />
           <Route path="track/:id" element={<Track />} />
           <Route path="checkout" element={<Checkout />} />
+          <Route path="admin" element={<AdminDashboard />} />
           {/* Dashboard needs special protection handling */}
           <Route path="dashboard" element={
             <ProtectedRoute>

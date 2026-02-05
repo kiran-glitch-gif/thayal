@@ -59,6 +59,24 @@ app.post('/api/orders', (req, res) => {
     });
 });
 
+// Admin: Get All Orders
+app.get('/api/admin/orders', (req, res) => {
+    db.all("SELECT * FROM orders ORDER BY rowid DESC", [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+// Admin: Update Order Status
+app.put('/api/admin/orders/:id/status', (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    db.run("UPDATE orders SET status = ? WHERE id = ?", [status, id], function (err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: "Status updated successfully" });
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });

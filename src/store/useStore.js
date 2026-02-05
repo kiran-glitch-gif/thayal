@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { API_URL } from '../config';
 
 export const useStore = create(
     persist(
@@ -21,7 +22,7 @@ export const useStore = create(
                 }
 
                 try {
-                    const res = await fetch('/api/login', {
+                    const res = await fetch(`${API_URL}/api/login`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email, password })
@@ -52,7 +53,7 @@ export const useStore = create(
             // Place Order
             placeOrder: async (orderData) => {
                 try {
-                    const response = await fetch('/api/orders', {
+                    const response = await fetch(`${API_URL}/api/orders`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(orderData)
