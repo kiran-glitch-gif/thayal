@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #F8F9FA;
+  color: #1E1E1E;
+}
+
+@layer components {
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12;
+  }
+}
+
+/* Ant Design Override for font */
+.ant-btn, .ant-input, .ant-menu, .ant-typography {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+/* Header Alignment Fixes */
+.ant-layout-header {
+  display: flex;
+  align-items: center;
+  padding-inline: 0 !important;
+}
+
+.ant-input-search {
+  display: flex;
+  align-items: center;
+}
+
+.ant-input-search .ant-input {
+  height: 40px !important;
+}
+
+.ant-input-search .ant-input-search-button {
+  height: 40px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ant-badge {
+  display: flex;
+  align-items: center;
+}
+
+.ant-btn-text {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Menu alignment */
+.ant-menu-horizontal {
+  display: flex;
+  align-items: center;
+  line-height: normal !important;
+}
+
+.ant-menu-horizontal .ant-menu-item {
+  display: flex;
+  align-items: center;
+}
