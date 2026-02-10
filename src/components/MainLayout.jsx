@@ -9,18 +9,28 @@ const { Header, Content, Footer } = Layout;
 export default function MainLayout() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [loginModalOpen, setLoginModalOpen] = useState(false);
+    const [isRegister, setIsRegister] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
-    const { user, login, logout, cart } = useStore();
+    const { user, login, register, logout, cart } = useStore();
 
     const handleLogin = async (values) => {
-        // Login is now handled entirely in the store (including mock check)
-        const success = await login(values.email, values.password);
-        if (success) {
-            message.success('Welcome back, Priya!');
+        const result = await login(values.email, values.password);
+        if (result.success) {
+            message.success('Welcome back!');
             setLoginModalOpen(false);
         } else {
-            message.error('Invalid credentials');
+            message.error(result.error);
+        }
+    };
+
+    const handleRegister = async (values) => {
+        const result = await register({ name: values.name, email: values.email, password: values.password });
+        if (result.success) {
+            message.success('Account created successfully!');
+            setLoginModalOpen(false);
+        } else {
+            message.error(result.error);
         }
     };
 
@@ -183,47 +193,64 @@ export default function MainLayout() {
 
             {/* Login Modal */}
             <Modal
-                title="Welcome to Thayal360"
+                title={isRegister ? "Create Account" : "Welcome Back"}
                 open={loginModalOpen}
-                onCancel={() => setLoginModalOpen(false)}
+                onCancel={() => {
+                    setLoginModalOpen(false);
+                    setIsRegister(false);
+                }}
                 footer={null}
                 destroyOnClose
             >
-                <Form onFinish={handleLogin} layout="vertical" initialValues={{ email: 'priya@example.com', password: '123456' }}>
-                    <Form.Item name="email" label="Email" rules={[{ required: true }]}>
-                        <Input />
+                <div className="mb-6 text-center">
+                    <p className="text-gray-500">{isRegister ? "Join the Thayal360 fashion revolution today." : "Please enter your details to access your dashboard."}</p>
+                </div>
+
+                <Form onFinish={isRegister ? handleRegister : handleLogin} layout="vertical">
+                    {isRegister && (
+                        <Form.Item name="name" label="Full Name" rules={[{ required: true, message: 'Please enter your name' }]}>
+                            <Input prefix={<UserOutlined className="text-gray-400" />} placeholder="John Doe" className="h-10" />
+                        </Form.Item>
+                    )}
+                    <Form.Item name="email" label="Email" rules={[{ required: true, type: 'email', message: 'Please enter a valid email' }]}>
+                        <Input prefix={<UserOutlined className="text-gray-400" />} placeholder="email@example.com" className="h-10" />
                     </Form.Item>
-                    <Form.Item name="password" label="Password" rules={[{ required: true }]}>
-                        <Input.Password />
+                    <Form.Item name="password" label="Password" rules={[{ required: true, min: 6, message: 'Password must be at least 6 characters' }]}>
+                        <Input.Password placeholder="••••••••" className="h-10" />
                     </Form.Item>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit" block className="h-10 text-lg bg-primary">
-                            Login
+
+                    <Form.Item className="mt-6 mb-4">
+                        <Button type="primary" htmlType="submit" block className="h-12 text-lg bg-primary font-bold shadow-lg">
+                            {isRegister ? "Start Designing" : "Secure Login"}
                         </Button>
                     </Form.Item>
 
-                    <div className="flex items-center gap-4 my-4">
-                        <div className="flex-1 h-px bg-gray-200"></div>
-                        <span className="text-gray-400 text-sm">Or</span>
-                        <div className="flex-1 h-px bg-gray-200"></div>
+                    <div className="text-center mb-6">
+                        {isRegister ? (
+                            <Text type="secondary" className="text-sm">Already have an account? <Button type="link" onClick={() => setIsRegister(false)} className="px-1 text-sm">Login here</Button></Text>
+                        ) : (
+                            <Text type="secondary" className="text-sm">New to Thayal360? <Button type="link" onClick={() => setIsRegister(true)} className="px-1 text-sm">Create Account</Button></Text>
+                        )}
+                    </div>
+
+                    <div className="flex items-center gap-4 my-6">
+                        <div className="flex-1 h-px bg-gray-100"></div>
+                        <span className="text-gray-400 text-xs font-semibold uppercase tracking-widest">Or login with</span>
+                        <div className="flex-1 h-px bg-gray-100"></div>
                     </div>
 
                     <Button
                         block
-                        className="h-10 text-lg flex items-center justify-center gap-2 hover:bg-gray-50 mb-4"
+                        className="h-12 flex items-center justify-center gap-3 hover:bg-gray-50 border-gray-200 text-gray-700 transition"
                         onClick={() => {
-                            message.loading('Connecting to Google...', 1).then(() => {
+                            message.loading('Connecting to Google...', 1.5).then(() => {
                                 handleLogin({ email: 'priya@example.com', password: 'mock-google-token' });
                             });
                         }}
                     >
                         <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-5 h-5" alt="Google" />
-                        Sign in with Google
+                        <span className="font-medium">Google Account</span>
                     </Button>
-
-                    <div className="text-center text-gray-500 text-sm">
-                        Use priya@example.com / 123456
-                    </div>
                 </Form>
             </Modal>
         </Layout>

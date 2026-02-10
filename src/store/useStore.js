@@ -7,38 +7,50 @@ export const useStore = create(
         (set) => ({
             // Auth
             user: null,
+            token: null,
             login: async (email, password) => {
-                // Mock Google Login Bypass
-                if (password === 'mock-google-token') {
-                    set({
-                        user: {
-                            name: "Priya (Google)",
-                            email: email,
-                            wallet: 500,
-                            orders: 2
-                        }
-                    });
-                    return true;
-                }
-
                 try {
-                    const res = await fetch(`${API_URL}/api/login`, {
+                    const res = await fetch(`${API_URL}/api/auth/login`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email, password })
                     });
 
-                    if (!res.ok) throw new Error('Login failed');
+                    if (!res.ok) {
+                        const err = await res.json();
+                        throw new Error(err.error || 'Login failed');
+                    }
 
                     const data = await res.json();
-                    set({ user: data.user });
-                    return true;
+                    set({ user: data.user, token: data.token });
+                    return { success: true };
                 } catch (error) {
                     console.error(error);
-                    return false;
+                    return { success: false, error: error.message };
                 }
             },
-            logout: () => set({ user: null }),
+            register: async (userData) => {
+                try {
+                    const res = await fetch(`${API_URL}/api/auth/register`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(userData)
+                    });
+
+                    if (!res.ok) {
+                        const err = await res.json();
+                        throw new Error(err.error || 'Registration failed');
+                    }
+
+                    const data = await res.json();
+                    set({ user: data.user, token: data.token });
+                    return { success: true };
+                } catch (error) {
+                    console.error(error);
+                    return { success: false, error: error.message };
+                }
+            },
+            logout: () => set({ user: null, token: null }),
 
             // Theme
             theme: 'light',

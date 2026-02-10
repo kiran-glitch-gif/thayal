@@ -57,41 +57,48 @@ function initDb() {
         db.get("SELECT count(*) as count FROM products", [], (err, row) => {
             if (row.count === 0) {
                 const products = [
-                    // WOMEN (10 Items)
-                    { name: "Bridal Lehenga", category: "Women", price: 15000, image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500", rating: 4.8 },
+                    // WOMEN (15 Items)
+                    { name: "Royal Bridal Lehenga", category: "Women", price: 25000, image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500", rating: 4.9 },
                     { name: "Silk Saree Blouse", category: "Women", price: 1200, image: "https://images.unsplash.com/photo-1610189032971-d602b9e61266?w=500", rating: 4.5 },
-                    { name: "Anarkali Suit", category: "Women", price: 4500, image: "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=500", rating: 4.7 },
-                    { name: "Designer Gown", category: "Women", price: 8000, image: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=500", rating: 4.6 },
-                    { name: "Printed Kurti", category: "Women", price: 999, image: "https://images.unsplash.com/photo-1502758107931-1de850e50338?w=500", rating: 4.3 },
-                    { name: "Chikankari Kurta", category: "Women", price: 2500, image: "https://images.unsplash.com/photo-1605218427368-35b8dd98c616?w=500", rating: 4.5 },
-                    { name: "Party Wear Dress", category: "Women", price: 3500, image: "https://images.unsplash.com/photo-1596462502278-27bfdd403cc2?w=500", rating: 4.4 },
-                    { name: "Velvet Lehenga", category: "Women", price: 12000, image: "https://images.unsplash.com/photo-1585850407137-b64eb119567c?w=500", rating: 4.9 },
-                    { name: "Cotton Salwar", category: "Women", price: 1800, image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500", rating: 4.2 },
-                    { name: "Embroidered Blouse", category: "Women", price: 1500, image: "https://images.unsplash.com/photo-1634543787768-45c110900eMc?w=500", rating: 4.6 },
+                    { name: "Anarkali Suit Set", category: "Women", price: 4500, image: "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=500", rating: 4.7 },
+                    { name: "Designer Evening Gown", category: "Women", price: 8500, image: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=500", rating: 4.6 },
+                    { name: "Printed Floral Kurti", category: "Women", price: 899, image: "https://images.unsplash.com/photo-1502758107931-1de850e50338?w=500", rating: 4.3 },
+                    { name: "Chikankari White Kurta", category: "Women", price: 2800, image: "https://images.unsplash.com/photo-1605218427368-35b8dd98c616?w=500", rating: 4.5 },
+                    { name: "Party Wear Indo-Western", category: "Women", price: 3800, image: "https://images.unsplash.com/photo-1596462502278-27bfdd403cc2?w=500", rating: 4.4 },
+                    { name: "Deep Red Velvet Lehenga", category: "Women", price: 18000, image: "https://images.unsplash.com/photo-1585850407137-b64eb119567c?w=500", rating: 4.9 },
+                    { name: "Cotton Salwar Kameez", category: "Women", price: 1800, image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500", rating: 4.2 },
+                    { name: "Zari Embroidered Blouse", category: "Women", price: 2200, image: "https://images.unsplash.com/photo-1634543787768-45c110900eMc?w=500", rating: 4.6 },
+                    { name: "Handwoven Banarasi Saree", category: "Women", price: 12000, image: "https://images.unsplash.com/photo-1610189012903-8889bd8c1143?w=500", rating: 4.8 },
+                    { name: "Plazzo Suit Set", category: "Women", price: 3200, image: "https://images.unsplash.com/photo-1617114919297-3c8ddb01f599?w=500", rating: 4.4 },
+                    { name: "Organza Party Dress", category: "Women", price: 5500, image: "https://images.unsplash.com/photo-1572804013307-a9a111dc0308?w=500", rating: 4.5 },
+                    { name: "Short Designer Kurti", category: "Women", price: 1100, image: "https://images.unsplash.com/photo-1598501022234-54730a76d3fc?w=500", rating: 4.3 },
+                    { name: "Net Embroidered Saree", category: "Women", price: 6800, image: "https://images.unsplash.com/photo-1583391733975-ce4018a666ad?w=500", rating: 4.7 },
 
-                    // MEN (10 Items)
-                    { name: "Classic Sherwani", category: "Men", price: 18000, image: "https://images.unsplash.com/photo-1622359556133-c80d8f78038c?w=500", rating: 4.9 },
-                    { name: "Formal Blazer", category: "Men", price: 5500, image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=500", rating: 4.7 },
-                    { name: "White Shirt", category: "Men", price: 1200, image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500", rating: 4.5 },
-                    { name: "Nehru Jacket", category: "Men", price: 3000, image: "https://images.unsplash.com/photo-1550921471-da0c279c09c9?w=500", rating: 4.6 },
-                    { name: "Kurta Pajama", category: "Men", price: 2500, image: "https://images.unsplash.com/photo-1606709623257-2ad0b0d61756?w=500", rating: 4.4 },
-                    { name: "Wedding Suit", category: "Men", price: 12000, image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=500", rating: 4.8 },
-                    { name: "Linen Shirt", category: "Men", price: 1500, image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500", rating: 4.3 },
-                    { name: "Casual Trousers", category: "Men", price: 1800, image: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=500", rating: 4.2 },
-                    { name: "Silk Kurta", category: "Men", price: 3500, image: "https://images.unsplash.com/photo-1588636412140-5e3e2c34279b?w=500", rating: 4.6 },
-                    { name: "Jodhpuri Suit", category: "Men", price: 8500, image: "https://images.unsplash.com/photo-1526658098099-2322cb20155b?w=500", rating: 4.8 },
+                    // MEN (12 Items)
+                    { name: "Premium Wedding Sherwani", category: "Men", price: 22000, image: "https://images.unsplash.com/photo-1622359556133-c80d8f78038c?w=500", rating: 4.9 },
+                    { name: "Italian Cut Formal Blazer", category: "Men", price: 7500, image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=500", rating: 4.7 },
+                    { name: "Oxford White Formal Shirt", category: "Men", price: 1500, image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500", rating: 4.5 },
+                    { name: "Modi Style Nehru Jacket", category: "Men", price: 3200, image: "https://images.unsplash.com/photo-1550921471-da0c279c09c9?w=500", rating: 4.6 },
+                    { name: "Cotton Kurta Pajama", category: "Men", price: 2200, image: "https://images.unsplash.com/photo-1606709623257-2ad0b0d61756?w=500", rating: 4.4 },
+                    { name: "Bespoke 3-Piece Suit", category: "Men", price: 15000, image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=500", rating: 4.8 },
+                    { name: "Pure Linen Summer Shirt", category: "Men", price: 1800, image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500", rating: 4.3 },
+                    { name: "Slim Fit Chinos", category: "Men", price: 2100, image: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=500", rating: 4.2 },
+                    { name: "Raw Silk Ethnic Kurta", category: "Men", price: 4200, image: "https://images.unsplash.com/photo-1588636412140-5e3e2c34279b?w=500", rating: 4.6 },
+                    { name: "Traditional Jodhpuri Set", category: "Men", price: 9500, image: "https://images.unsplash.com/photo-1526658098099-2322cb20155b?w=500", rating: 4.8 },
+                    { name: "Designer Waistcoat", category: "Men", price: 2800, image: "https://images.unsplash.com/photo-1617130863154-964ff3b456bd?w=500", rating: 4.5 },
+                    { name: "Velvet Bandhgala", category: "Men", price: 11000, image: "https://images.unsplash.com/photo-1605518295077-5c2f3775f0f3?w=500", rating: 4.7 },
 
                     // KIDS (10 Items)
-                    { name: "Party Frock", category: "Kids", price: 2500, image: "https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?w=500", rating: 4.7 },
-                    { name: "Kids Sherwani", category: "Kids", price: 3500, image: "https://images.unsplash.com/photo-1616428787754-0b70d421d898?w=500", rating: 4.8 },
-                    { name: "Cotton Pajama Set", category: "Kids", price: 900, image: "https://images.unsplash.com/photo-1519238804368-68f9a2e8c255?w=500", rating: 4.5 },
-                    { name: "Denim Jacket", category: "Kids", price: 1500, image: "https://images.unsplash.com/photo-1574046714589-9bd176461993?w=500", rating: 4.6 },
-                    { name: "Princess Gown", category: "Kids", price: 4000, image: "https://images.unsplash.com/photo-1621452773781-0f992ee61c60?w=500", rating: 4.9 },
-                    { name: "Boys Kurta", category: "Kids", price: 1200, image: "https://images.unsplash.com/photo-1596870230751-ebdfce98ec42?w=500", rating: 4.4 },
-                    { name: "Summer Dress", category: "Kids", price: 800, image: "https://images.unsplash.com/photo-1514090458221-65bb69cf63e6?w=500", rating: 4.3 },
-                    { name: "Festive Lehenga", category: "Kids", price: 3000, image: "https://images.unsplash.com/photo-1628045620958-867c2957b8c8?w=500", rating: 4.8 },
-                    { name: "Suit Set", category: "Kids", price: 2800, image: "https://images.unsplash.com/photo-1503919545889-aef636e10ad4?w=500", rating: 4.6 },
-                    { name: "Casual T-Shirt", category: "Kids", price: 500, image: "https://images.unsplash.com/photo-1519457431-44ccd64a579b?w=500", rating: 4.2 }
+                    { name: "Floral Party Frock", category: "Kids", price: 2200, image: "https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?w=500", rating: 4.7 },
+                    { name: "Little Prince Sherwani", category: "Kids", price: 3800, image: "https://images.unsplash.com/photo-1616428787754-0b70d421d898?w=500", rating: 4.8 },
+                    { name: "Cotton Nightsuit Set", category: "Kids", price: 850, image: "https://images.unsplash.com/photo-1519238804368-68f9a2e8c255?w=500", rating: 4.5 },
+                    { name: "Kids Designer Blazer", category: "Kids", price: 2800, image: "https://images.unsplash.com/photo-1574046714589-9bd176461993?w=500", rating: 4.6 },
+                    { name: "Angelic White Gown", category: "Kids", price: 4500, image: "https://images.unsplash.com/photo-1621452773781-0f992ee61c60?w=500", rating: 4.9 },
+                    { name: "Embroidered Boys Kurta", category: "Kids", price: 1500, image: "https://images.unsplash.com/photo-1596870230751-ebdfce98ec42?w=500", rating: 4.4 },
+                    { name: "Summer Sundress", category: "Kids", price: 950, image: "https://images.unsplash.com/photo-1514090458221-65bb69cf63e6?w=500", rating: 4.3 },
+                    { name: "Mini Festive Lehenga", category: "Kids", price: 3500, image: "https://images.unsplash.com/photo-1628045620958-867c2957b8c8?w=500", rating: 4.8 },
+                    { name: "Gentleman Suit for Kids", category: "Kids", price: 3200, image: "https://images.unsplash.com/photo-1503919545889-aef636e10ad4?w=500", rating: 4.6 },
+                    { name: "Casual Graphic Tee", category: "Kids", price: 450, image: "https://images.unsplash.com/photo-1519457431-44ccd64a579b?w=500", rating: 4.2 }
                 ];
                 const stmt = db.prepare("INSERT INTO products (name, category, price, image, rating) VALUES (?, ?, ?, ?, ?)");
                 products.forEach(p => {
