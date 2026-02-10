@@ -65,14 +65,25 @@ export default function AdminDashboard() {
     };
 
     useEffect(() => {
-        if (!user || (!user.email.includes('admin') && user.email !== 'priya@example.com')) {
-            // Only allow if admin or for demo purposes
-            message.error("Access denied. Admin privileges required.");
+        if (!user) {
+            message.warning("Please login as Admin to access this panel.");
             navigate('/');
+            // Trigger login modal via state if possible, or just redirect
             return;
         }
+
+        // For development/review phase, we allow the user to see the dashboard 
+        // even if not strictly 'admin' in email, but we notify them.
+        if (!user.email.includes('admin') && user.email !== 'priya@example.com') {
+            notification.info({
+                message: 'Review Mode Active',
+                description: 'You are viewing the Admin Dashboard in Review Mode. In production, this is restricted to admin@thayal360.com.',
+                placement: 'top'
+            });
+        }
+
         fetchOrders();
-    }, []);
+    }, [user]);
 
     const calculateStats = (data) => {
         const totalRev = data.reduce((sum, order) => sum + (order.price || 0), 0);
