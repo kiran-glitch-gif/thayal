@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -22,6 +21,16 @@ const JWT_SECRET = 'thayal360_secret_key_2026';
 
 app.use(cors());
 app.use(bodyParser.json());
+
+// Root route for status check
+app.get('/', (req, res) => {
+    res.json({
+        status: "Thayal360 API is Running",
+        version: "2.5.0",
+        realtime: "Socket.io active",
+        endpoints: ["/api/products", "/api/auth/login", "/api/orders"]
+    });
+});
 
 // Real-time connections
 io.on('connection', (socket) => {
