@@ -85,6 +85,15 @@ app.post('/api/auth/login', (req, res) => {
         // Fetch orders count
         db.all("SELECT * FROM orders WHERE user_email = ?", [email], (err, orders) => {
             const token = jwt.sign({ email: row.email, name: row.name }, JWT_SECRET, { expiresIn: '24h' });
+
+            // Notify Admin of User Activity (Login)
+            io.emit('user_activity', {
+                type: 'LOGIN',
+                name: row.name,
+                email: row.email,
+                time: new Date().toLocaleTimeString()
+            });
+
             res.json({
                 token,
                 user: {

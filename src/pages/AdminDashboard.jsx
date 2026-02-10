@@ -12,6 +12,7 @@ const { Option } = Select;
 export default function AdminDashboard() {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [activities, setActivities] = useState([]);
     const [stats, setStats] = useState({ revenue: 0, totalOrders: 0, pending: 0, completed: 0 });
     const { user } = useStore();
     const navigate = useNavigate();
@@ -28,6 +29,14 @@ export default function AdminDashboard() {
                 duration: 5
             });
             fetchOrders(); // Refresh to show new order
+            setActivities(prev => [{ ...order, type: 'ORDER', time: new Date().toLocaleTimeString() }, ...prev].slice(0, 10));
+        });
+
+        socket.on('user_activity', (act) => {
+            setActivities(prev => [{ ...act, time: new Date().toLocaleTimeString() }, ...prev].slice(0, 10));
+            if (act.type === 'LOGIN') {
+                message.info(`${act.name} logged in just now`);
+            }
         });
 
         return () => socket.disconnect();
@@ -189,69 +198,50 @@ export default function AdminDashboard() {
 
                 {/* Stats Row */}
                 <Row gutter={[24, 24]} className="mb-10">
-                    <Col xs={24} sm={12} lg={6}>
-                        <Card bordered={false} className="shadow-sm rounded-2xl">
-                            <Statistic
-                                title={<span className="text-slate-400 font-medium">Daily Revenue</span>}
-                                value={stats.revenue}
-                                precision={0}
-                                valueStyle={{ color: '#0F172A', fontWeight: 800 }}
-                                prefix={<DollarOutlined className="text-emerald-500" />}
-                                suffix="₹"
+                    <Col xs={24} lg={18}>
+                        <Card
+                            bordered={false}
+                            className="shadow-xl rounded-2xl overflow-hidden"
+                            title={<div className="flex items-center gap-2"><BellOutlined className="text-primary" /> <span className="font-bold">Real-time Order Queue</span></div>}
+                            extra={<Input prefix={<SearchOutlined />} placeholder="Search customer ID or email..." className="w-64 rounded-lg bg-slate-50 border-none" />}
+                        >
+                            <Table
+                                columns={columns}
+                                dataSource={orders}
+                                rowKey="id"
+                                loading={loading}
+                                pagination={{ pageSize: 8 }}
+                                scroll={{ x: true }}
+                                className="admin-table"
                             />
                         </Card>
                     </Col>
-                    <Col xs={24} sm={12} lg={6}>
-                        <Card bordered={false} className="shadow-sm rounded-2xl">
-                            <Statistic
-                                title={<span className="text-slate-400 font-medium">Active Orders</span>}
-                                value={stats.totalOrders}
-                                valueStyle={{ color: '#0F172A', fontWeight: 800 }}
-                                prefix={<ShoppingOutlined className="text-indigo-500" />}
-                            />
-                        </Card>
-                    </Col>
-                    <Col xs={24} sm={12} lg={6}>
-                        <Card bordered={false} className="shadow-sm rounded-2xl">
-                            <Statistic
-                                title={<span className="text-slate-400 font-medium">Action Required</span>}
-                                value={stats.pending}
-                                valueStyle={{ color: '#E11D48', fontWeight: 800 }}
-                                prefix={<ClockCircleOutlined className="text-rose-500" />}
-                                suffix=" Orders"
-                            />
-                        </Card>
-                    </Col>
-                    <Col xs={24} sm={12} lg={6}>
-                        <Card bordered={false} className="shadow-sm rounded-2xl">
-                            <Statistic
-                                title={<span className="text-slate-400 font-medium">Success Rate</span>}
-                                value={98.4}
-                                valueStyle={{ color: '#0F172A', fontWeight: 800 }}
-                                prefix={<UserOutlined className="text-sky-500" />}
-                                suffix="%"
-                            />
+
+                    <Col xs={24} lg={6}>
+                        <Card
+                            bordered={false}
+                            className="shadow-xl rounded-2xl h-full"
+                            title={<div className="flex items-center gap-2 text-rose-600"><ClockCircleOutlined /> <span className="font-bold">Live Activity Feed</span></div>}
+                        >
+                            <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
+                                {activities.length === 0 && <p className="text-gray-400 text-center py-8">No recent activity detected.</p>}
+                                {activities.map((act, i) => (
+                                    <div key={i} className="flex gap-3 items-start animate-fade-in">
+                                        <Avatar size="small" className="bg-primary/10 text-primary flex-shrink-0">
+                                            {act.type === 'LOGIN' ? <UserOutlined /> : <ShoppingOutlined />}
+                                        </Avatar>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm m-0 font-medium text-slate-800 truncate">
+                                                {act.type === 'LOGIN' ? `${act.name} Logged In` : `New Order: ${act.id}`}
+                                            </p>
+                                            <p className="text-xs m-0 text-slate-400">{act.time} • {act.email || act.user_email}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </Card>
                     </Col>
                 </Row>
-
-                {/* Orders Table */}
-                <Card
-                    bordered={false}
-                    className="shadow-xl rounded-2xl overflow-hidden"
-                    title={<div className="flex items-center gap-2"><BellOutlined className="text-primary" /> <span className="font-bold">Real-time Order Queue</span></div>}
-                    extra={<Input prefix={<SearchOutlined />} placeholder="Search customer ID or email..." className="w-64 rounded-lg bg-slate-50 border-none" />}
-                >
-                    <Table
-                        columns={columns}
-                        dataSource={orders}
-                        rowKey="id"
-                        loading={loading}
-                        pagination={{ pageSize: 8 }}
-                        scroll={{ x: true }}
-                        className="admin-table"
-                    />
-                </Card>
 
             </div>
         </div>
