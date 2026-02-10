@@ -16,8 +16,8 @@ const io = new Server(server, {
     }
 });
 
-const PORT = 5000;
-const JWT_SECRET = 'thayal360_secret_key_2026';
+const PORT = process.env.PORT || 5000;
+const JWT_SECRET = process.env.JWT_SECRET || 'thayal360_secret_key_2026';
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -127,9 +127,10 @@ app.get('/api/orders', (req, res) => {
     });
 });
 
-// Create Order (Broadcasting to Admin)
-app.post('/api/orders', (req, res) => {
-    const { id, user_email, item_name, status, tailor, delivery_date, price } = req.body;
+// Create Order (Broadcasting to Admin) - Protected
+app.post('/api/orders', authenticate, (req, res) => {
+    const { id, item_name, status, tailor, delivery_date, price } = req.body;
+    const user_email = req.user.email; // Use email from token instead of body for security
     const sql = `INSERT INTO orders (id, user_email, item_name, status, tailor, delivery_date, price) VALUES (?, ?, ?, ?, ?, ?, ?)`;
     db.run(sql, [id, user_email, item_name, status, tailor, delivery_date, price], function (err) {
         if (err) return res.status(500).json({ error: err.message });
@@ -141,16 +142,17 @@ app.post('/api/orders', (req, res) => {
     });
 });
 
-// Admin: Get All Orders
-app.get('/api/admin/orders', (req, res) => {
+// Admin: Get All Orders - Protected
+app.get('/api/admin/orders', authenticate, (req, res) => {
+    // In a real app, check if req.user is an admin
     db.all("SELECT * FROM orders ORDER BY rowid DESC", [], (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json(rows);
     });
 });
 
-// Admin: Update Order Status (Broadcasting to User)
-app.put('/api/admin/orders/:id/status', (req, res) => {
+// Admin: Update Order Status (Broadcasting to User) - Protected
+app.put('/api/admin/orders/:id/status', authenticate, (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
     db.run("UPDATE orders SET status = ? WHERE id = ?", [status, id], function (err) {

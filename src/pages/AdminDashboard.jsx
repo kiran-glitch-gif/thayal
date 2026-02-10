@@ -35,9 +35,14 @@ export default function AdminDashboard() {
 
     // Fetch Orders from Backend
     const fetchOrders = async () => {
+        const { token } = useStore.getState();
         setLoading(true);
         try {
-            const res = await fetch(`${API_URL}/api/admin/orders`);
+            const res = await fetch(`${API_URL}/api/admin/orders`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             if (!res.ok) throw new Error('Failed to fetch orders');
             const data = await res.json();
             setOrders(data);
@@ -53,6 +58,9 @@ export default function AdminDashboard() {
     useEffect(() => {
         if (!user || (!user.email.includes('admin') && user.email !== 'priya@example.com')) {
             // Only allow if admin or for demo purposes
+            message.error("Access denied. Admin privileges required.");
+            navigate('/');
+            return;
         }
         fetchOrders();
     }, []);
@@ -71,10 +79,14 @@ export default function AdminDashboard() {
     };
 
     const handleStatusChange = async (orderId, newStatus) => {
+        const { token } = useStore.getState();
         try {
             const res = await fetch(`${API_URL}/api/admin/orders/${orderId}/status`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 body: JSON.stringify({ status: newStatus })
             });
 

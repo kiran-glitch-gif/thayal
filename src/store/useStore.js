@@ -64,14 +64,21 @@ export const useStore = create(
 
             // Place Order
             placeOrder: async (orderData) => {
+                const { token } = useStore.getState();
                 try {
                     const response = await fetch(`${API_URL}/api/orders`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
                         body: JSON.stringify(orderData)
                     });
 
-                    if (!response.ok) throw new Error('Failed to place order');
+                    if (!response.ok) {
+                        const err = await response.json();
+                        throw new Error(err.error || 'Failed to place order');
+                    }
 
                     const result = await response.json();
                     return { success: true, data: result };
