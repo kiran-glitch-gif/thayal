@@ -1,4 +1,7 @@
+import { useState, useEffect } from 'react';
 const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
@@ -6,11 +9,33 @@ const bcrypt = require('bcryptjs');
 const db = require('./database.cjs');
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
+
 const PORT = 5000;
 const JWT_SECRET = 'thayal360_secret_key_2026';
 
 app.use(cors());
 app.use(bodyParser.json());
+
+// Real-time connections
+io.on('connection', (socket) => {
+    console.log('User connected:', socket.id);
+
+    socket.on('join_order', (orderId) => {
+        socket.join(orderId);
+        console.log(`User joined order room: ${orderId}`);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+    });
+});
 
 // Auth: Register
 app.post('/api/auth/register', async (req, res) => {
@@ -84,7 +109,7 @@ app.get('/api/products', (req, res) => {
     });
 });
 
-// ... rest of the generic endpoints (Get Orders, Create Order, Admin)
+// Get Orders for User
 app.get('/api/orders', (req, res) => {
     const { email } = req.query;
     db.all("SELECT * FROM orders WHERE user_email = ?", [email], (err, rows) => {
@@ -93,15 +118,21 @@ app.get('/api/orders', (req, res) => {
     });
 });
 
+// Create Order (Broadcasting to Admin)
 app.post('/api/orders', (req, res) => {
     const { id, user_email, item_name, status, tailor, delivery_date, price } = req.body;
     const sql = `INSERT INTO orders (id, user_email, item_name, status, tailor, delivery_date, price) VALUES (?, ?, ?, ?, ?, ?, ?)`;
     db.run(sql, [id, user_email, item_name, status, tailor, delivery_date, price], function (err) {
         if (err) return res.status(500).json({ error: err.message });
+
+        // Notify admin of new order
+        io.emit('new_order', { id, user_email, item_name, price });
+
         res.json({ message: "Order created", id: this.lastID });
     });
 });
 
+// Admin: Get All Orders
 app.get('/api/admin/orders', (req, res) => {
     db.all("SELECT * FROM orders ORDER BY rowid DESC", [], (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });
@@ -109,16 +140,22 @@ app.get('/api/admin/orders', (req, res) => {
     });
 });
 
+// Admin: Update Order Status (Broadcasting to User)
 app.put('/api/admin/orders/:id/status', (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
     db.run("UPDATE orders SET status = ? WHERE id = ?", [status, id], function (err) {
         if (err) return res.status(500).json({ error: err.message });
+
+        // Notify specific order room of status update
+        io.to(id).emit('order_status_update', { id, status });
+
         res.json({ message: "Status updated successfully" });
     });
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
+
 
