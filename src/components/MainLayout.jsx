@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Layout, Menu, Button, Drawer, Badge, Avatar, Dropdown, Modal, Form, Input, message } from 'antd';
-import { MenuOutlined, ShoppingCartOutlined, UserOutlined, SearchOutlined, LogoutOutlined } from '@ant-design/icons';
+import { Layout, Menu, Button, Drawer, Badge, Avatar, Dropdown, Modal, Form, Input, message, Typography } from 'antd';
+import { MenuOutlined, ShoppingCartOutlined, UserOutlined, SearchOutlined, LogoutOutlined, MailOutlined } from '@ant-design/icons';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 
 const { Header, Content, Footer } = Layout;
+const { Text, Title } = Typography;
 
 export default function MainLayout() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -53,7 +54,7 @@ export default function MainLayout() {
             <Header className="sticky top-0 z-50 flex items-center justify-between px-4 sm:px-8 bg-white/95 backdrop-blur shadow-sm h-20">
                 {/* Logo */}
                 <div className="flex-shrink-0 cursor-pointer flex items-center gap-1 sm:gap-2" onClick={() => navigate('/')}>
-                    <img src="/logo.png" alt="Thayal360" className="h-12 md:h-14 w-auto object-contain" />
+                    <img src="/logo.png" alt="Thayal360" className="h-16 md:h-20 w-auto object-contain" />
                     <span className="text-xl md:text-2xl font-bold text-gray-900 tracking-wide font-serif">Thayal 360</span>
                 </div>
 
@@ -141,7 +142,6 @@ export default function MainLayout() {
                             <li><Link to="/services" className="hover:text-accent">Services</Link></li>
                             <li><Link to="/track/1" className="hover:text-accent">Track Order</Link></li>
                             <li><Link to="/contact" className="hover:text-accent">Support</Link></li>
-                            <li><Link to="/admin" className="text-gray-500 hover:text-white text-xs">Admin Portal</Link></li>
                         </ul>
                     </div>
                     <div>
@@ -167,7 +167,7 @@ export default function MainLayout() {
             <Drawer
                 title={
                     <div className="flex items-center gap-2">
-                        <img src="/logo.png" alt="Logo" className="h-10 w-auto" />
+                        <img src="/logo.png" alt="Logo" className="h-14 w-auto" />
                         <span className="font-serif text-lg">Thayal 360</span>
                     </div>
                 }

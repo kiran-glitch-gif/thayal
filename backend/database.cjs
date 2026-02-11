@@ -43,6 +43,15 @@ function initDb() {
       price REAL
     )`);
 
+        // Contacts Table
+        db.run(`CREATE TABLE IF NOT EXISTS contacts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      email TEXT,
+      message TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
+
         // Seed User
         db.get("SELECT * FROM users WHERE email = ?", ['priya@example.com'], (err, row) => {
             if (!row) {

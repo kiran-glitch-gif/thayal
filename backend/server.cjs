@@ -174,6 +174,27 @@ app.put('/api/admin/orders/:id/status', authenticate, (req, res) => {
     });
 });
 
+// Contact: Submit Message
+app.post('/api/contact', (req, res) => {
+    const { name, email, message } = req.body;
+    db.run("INSERT INTO contacts (name, email, message) VALUES (?, ?, ?)", [name, email, message], function (err) {
+        if (err) return res.status(500).json({ error: err.message });
+
+        // Notify admin of new contact message
+        io.emit('new_contact', { name, email, message, time: new Date().toLocaleTimeString() });
+
+        res.json({ message: "Message sent successfully", id: this.lastID });
+    });
+});
+
+// Admin: Get All Contact Messages - Protected
+app.get('/api/admin/contacts', authenticate, (req, res) => {
+    db.all("SELECT * FROM contacts ORDER BY created_at DESC", [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
 server.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });

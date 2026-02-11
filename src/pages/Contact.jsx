@@ -1,5 +1,6 @@
-import { Form, Input, Button, Collapse, Row, Col, Typography } from 'antd';
+import { Form, Input, Button, Collapse, Row, Col, Typography, message } from 'antd';
 import { MailOutlined, WhatsAppOutlined, EnvironmentOutlined } from '@ant-design/icons';
+import { API_URL } from '../config';
 
 const { Title } = Typography;
 const { Panel } = Collapse;
@@ -14,9 +15,29 @@ export default function Contact() {
 
             <Row gutter={48}>
                 <Col xs={24} md={12} className="mb-8">
-                    <Form layout="vertical" size="large" className="bg-white p-6 rounded-lg shadow-sm">
+                    <Form
+                        layout="vertical"
+                        size="large"
+                        className="bg-white p-6 rounded-lg shadow-sm"
+                        onFinish={async (values) => {
+                            try {
+                                const res = await fetch(`${API_URL}/api/contact`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(values)
+                                });
+                                if (res.ok) {
+                                    message.success("Message sent! Our team will contact you soon.");
+                                } else {
+                                    throw new Error('Failed to send message');
+                                }
+                            } catch (e) {
+                                message.error("Could not send message. Please try again.");
+                            }
+                        }}
+                    >
                         <Form.Item label="Name" name="name" rules={[{ required: true }]}><Input /></Form.Item>
-                        <Form.Item label="Email" name="email" rules={[{ required: true }]}><Input /></Form.Item>
+                        <Form.Item label="Email" name="email" rules={[{ required: true, type: 'email' }]}><Input /></Form.Item>
                         <Form.Item label="Message" name="message" rules={[{ required: true }]}><Input.TextArea rows={4} /></Form.Item>
                         <Button type="primary" htmlType="submit" className="bg-primary w-full">Send Message</Button>
                     </Form>
