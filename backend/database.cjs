@@ -1,9 +1,8 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
-const dbPath = path.resolve(__dirname, 'thayal360.db');
-
-const db = new sqlite3.Database('./backend/thayal360_v2.db', (err) => {
+const dbPath = path.resolve(__dirname, 'thayal360_v3.db');
+const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.error('Error opening database', err);
     } else {
